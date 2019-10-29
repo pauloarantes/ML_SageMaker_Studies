@@ -7,6 +7,7 @@ import pandas as pd
 from sklearn.externals import joblib
 
 ## TODO: Import any additional libraries you need to define a model
+from sklearn.ensemble import RandomForestClassifier
 
 
 # Provided model load function
@@ -39,6 +40,9 @@ if __name__ == '__main__':
     parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
     
     ## TODO: Add any additional arguments that you will need to pass into your model
+    parser.add_argument('--max-depth', type=int, default=3)
+    parser.add_argument('--n-estimators', type=int, default=10)
+    parser.add_argument('--max-features', type=int, default=2)
     
     # args holds all passed-in arguments
     args = parser.parse_args()
@@ -56,11 +60,15 @@ if __name__ == '__main__':
     
 
     ## TODO: Define a model 
-    model = None
+    model = RandomForestClassifier(
+        max_depth=args.max_depth,
+        n_estimators=args.n_estimators,
+        max_features=args.max_features
+    )
     
     
     ## TODO: Train the model
-    
+    model.fit(train_x, train_y)
     
     
     ## --- End of your code  --- ##
