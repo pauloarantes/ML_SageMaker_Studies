@@ -140,8 +140,10 @@ if __name__ == '__main__':
   
     ## TODO: Add args for the three model parameters: input_dim, hidden_dim, output_dim
     # Model parameters
+    parser.add_argument('--input-dim', type=int)
+    parser.add_argument('--hidden-dim', type=int)
+    parser.add_argument('--output-dim', type=int)
 
-    
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -153,20 +155,18 @@ if __name__ == '__main__':
         
     # get train loader
     train_loader = _get_train_loader(args.batch_size, args.data_dir) # data_dir from above..
-    
-    
+
     ## TODO:  Build the model by passing in the input params
     # To get params from the parser, call args.argument_name, ex. args.epochs or ards.hidden_dim
     # Don't forget to move your model .to(device) to move to GPU , if appropriate
-    model = None
+    model = SimpleNet(args.input_dim, args.hidden_dim, args.output_dim).to(device)
     
     # Given: save the parameters used to construct the model
     save_model_params(model, args.model_dir)
 
     ## TODO: Define an optimizer and loss function for training
-    optimizer = None
-    criterion = None
-
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    criterion = nn.BCELoss()
     
     # Trains the model (given line of code, which calls the above training function)
     # This function *also* saves the model state dictionary
